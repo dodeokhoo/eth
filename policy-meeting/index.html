@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>우리 나라 정책 회의</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/galmuri/dist/galmuri.css">
+<style>
+:root{
+  --ink:#1E1240; --deep:#2A0A5E; --p2:#7A1FC2; --pink:#F03BC8; --yellow:#FFE14D; --coin:#FFD23F;
+  --cyan:#35D7F5; --cyan-d:#1C9CC9; --lime:#7ED957; --soft:#F3ECFF; --paper:#FFFFFF;
+  --pxb: 0 -4px 0 0 var(--ink), 0 4px 0 0 var(--ink), -4px 0 0 0 var(--ink), 4px 0 0 0 var(--ink);
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{
+  font-family:'Galmuri11','Galmuri9',system-ui,sans-serif; font-size:18px; line-height:1.6; color:#fff;
+  background:linear-gradient(to bottom,#3D0878 0 14%,#4B0C8F 14% 28%,#5E14A6 28% 42%,#7A1FC2 42% 56%,#9A22C6 56% 68%,#B526C9 68% 80%,#D730C8 80% 91%,#F03BC8 91% 100%) fixed;
+}
+body.is-teacher{font-size:21px}
+#stars{position:fixed;inset:0;pointer-events:none;z-index:0}
+#stars i{position:absolute;width:4px;height:4px;background:var(--cyan)}
+#stars i.w{background:#fff}
+#stars i.b{width:6px;height:6px}
+#app{position:relative;z-index:1}
+h1,h2,h3{font-family:'Galmuri14','Galmuri11',sans-serif;font-weight:400;margin:0}
+.wrap{max-width:1120px;margin:0 auto;padding:20px 16px 72px;display:flex;flex-direction:column;gap:22px}
+.wrap.narrow{max-width:540px;padding-top:7vh}
+.panel{background:var(--paper);color:var(--ink);padding:20px 22px;margin:4px;box-shadow:var(--pxb),10px 10px 0 4px rgba(42,10,94,.45)}
+.panel h2{font-size:23px;margin-bottom:10px}
+.panel.center{text-align:center}
+.title{
+  font-family:'Galmuri14','Galmuri11',sans-serif;color:var(--yellow);font-size:38px;line-height:1.3;
+  text-shadow:3px 0 0 var(--ink),-3px 0 0 var(--ink),0 3px 0 var(--ink),0 -3px 0 var(--ink),3px 3px 0 var(--ink),-3px -3px 0 var(--ink),3px -3px 0 var(--ink),-3px 3px 0 var(--ink),7px 7px 0 var(--deep);
+}
+.title.xl{font-size:64px}
+.title.sm{font-size:30px}
+.brand{text-align:center;margin-bottom:6px}
+.help{margin:0 0 12px;color:#4A3A78;font-size:16px}
+.muted{color:#6E5E9A}
+.err{color:#C4127F;margin:8px 0}
+.ok{color:#2E7D1E;margin:8px 0 0}
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.field{display:block;margin-bottom:16px}
+.field span{display:block;font-size:16px;margin-bottom:6px}
+input,textarea,select{
+  font-family:'Galmuri11',sans-serif;font-size:20px;color:var(--ink);background:#fff;
+  border:3px solid var(--ink);padding:10px 12px;width:100%;border-radius:0
+}
+input:focus,textarea:focus,select:focus{outline:4px solid var(--cyan);outline-offset:0}
+.btn{
+  font-family:'Galmuri11',sans-serif;font-size:18px;color:var(--ink);background:var(--yellow);border:0;
+  padding:12px 20px;margin:4px;cursor:pointer;box-shadow:var(--pxb),inset 0 -5px 0 0 #E2B700;
+}
+.btn:active{transform:translateY(2px)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.btn:focus-visible,button:focus-visible{outline:4px dashed var(--cyan);outline-offset:6px}
+.btn.big{font-size:22px;padding:16px 26px;width:calc(100% - 8px)}
+.btn.small{font-size:15px;padding:8px 14px}
+.btn.ghost{background:#fff;box-shadow:var(--pxb),inset 0 -5px 0 0 #DCD3F0}
+.btn.danger{background:var(--pink);color:#fff;box-shadow:var(--pxb),inset 0 -5px 0 0 #B81F92}
+.link{background:none;border:0;color:#fff;font:inherit;font-size:15px;text-decoration:underline;cursor:pointer}
+.badge{display:inline-block;font-size:14px;line-height:1.4;padding:2px 8px;margin-left:8px;background:var(--soft);color:var(--ink);box-shadow:0 0 0 2px var(--ink)}
+.role-A{background:var(--cyan)}
+.role-B{background:var(--lime)}
+.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px;background:rgba(30,18,64,.92);box-shadow:0 4px 0 0 var(--ink)}
+.topbar .phase-tag{color:var(--yellow);font-family:'Galmuri14',sans-serif}
+.big-name{font-size:30px;margin:6px 0 20px}
+.lead{font-size:20px;margin:0}
+pix,.pix{image-rendering:pixelated;flex:none}
+
+/* 진단 결과 */
+.qlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.qlist li{display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:start}
+.ox{width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-family:'Galmuri14',sans-serif;font-size:24px;box-shadow:0 0 0 3px var(--ink)}
+.ox.O{background:var(--lime)} .ox.X{background:#FFD6F1}
+.qlist p{margin:0}
+.qlist .ans{font-size:15px;color:#4A3A78}
+.reveal{text-align:center;background:var(--soft)}
+.reveal .title{font-size:46px;margin:6px 0;animation:pop .6s steps(4) both}
+@keyframes pop{0%{transform:scale(.4);opacity:0}100%{transform:scale(1);opacity:1}}
+.members{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:10px}
+.members li{background:var(--soft);padding:6px 10px;box-shadow:0 0 0 2px var(--ink)}
+.lead-mark{font-style:normal;font-size:13px;background:var(--yellow);padding:0 6px;margin-left:6px;box-shadow:0 0 0 2px var(--ink)}
+
+/* 두 바구니 분류 */
+.tray{display:flex;flex-wrap:wrap;min-height:78px;padding:8px;background:var(--soft);border:3px dashed var(--p2);margin-bottom:16px;cursor:pointer}
+.baskets{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.basket{min-height:200px;padding:12px;cursor:pointer}
+.basket h3{font-size:21px;margin-bottom:6px}
+.basket.pas{background:#E6FAFF;box-shadow:0 0 0 4px var(--cyan-d)}
+.basket.act{background:#FFEAF8;box-shadow:0 0 0 4px var(--pink)}
+.b-cards{display:flex;flex-wrap:wrap}
+.chip{display:flex;align-items:stretch;background:#fff;margin:7px;box-shadow:0 0 0 3px var(--ink)}
+.chip-main{display:flex;align-items:center;gap:8px;background:none;border:0;font:inherit;font-size:17px;color:var(--ink);padding:6px 10px;cursor:pointer;text-align:left}
+.chip-main:disabled{cursor:default}
+.chip .info{border:0;border-left:3px solid var(--ink);background:var(--soft);font:inherit;font-size:16px;width:38px;cursor:pointer;color:var(--ink)}
+.chip.picked{box-shadow:0 0 0 4px var(--yellow),0 0 0 7px var(--ink);transform:translateY(-3px)}
+.chip.right{background:#E9FBDF;box-shadow:0 0 0 3px #3A8F2A}
+.chip.wrong{background:#FFE3F6;box-shadow:0 0 0 3px var(--pink)}
+.msg{margin:16px 0 4px;padding:10px 12px;background:var(--soft);box-shadow:0 0 0 2px var(--ink)}
+
+/* 이유 쓰기 */
+.mini-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;margin:8px 0 16px}
+.mini{display:flex;align-items:center;gap:8px;background:#fff;border:0;font:inherit;font-size:16px;color:var(--ink);padding:8px;cursor:pointer;box-shadow:0 0 0 3px var(--ink);text-align:left;margin:3px}
+.mini.sel{background:#FFF7C2;box-shadow:0 0 0 4px var(--yellow),0 0 0 7px var(--ink)}
+.mini.done{background:#E9FBDF}
+.mini:disabled{opacity:.4;cursor:not-allowed}
+.sentence{background:var(--soft);padding:16px;box-shadow:0 0 0 3px var(--ink)}
+.sentence p{margin:0 0 12px;line-height:2.2}
+.sentence input{display:inline-block;width:auto;min-width:9em;max-width:100%;font-size:19px;padding:4px 8px}
+.sentence textarea{font-size:19px;margin:6px 0;resize:vertical}
+.fb{margin:10px 0 0;padding:10px 12px;background:#FFF7C2;box-shadow:0 0 0 2px var(--ink);font-size:16px}
+.done-reason{display:grid;grid-template-columns:44px 1fr;gap:12px;padding:12px 0;border-bottom:2px dashed #C9B6EE}
+.done-reason p{margin:4px 0}
+mark{background:#FFF0A8;color:var(--ink);padding:0 3px}
+
+/* 정책 회의 */
+.coinbar{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.coinbar b{font-family:'Galmuri14',sans-serif;font-size:26px}
+.coins{display:flex;gap:4px}
+.coins .pix.off{opacity:.22;filter:grayscale(1)}
+.policy-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:22px}
+.pcard{background:#fff;color:var(--ink);margin:4px;box-shadow:var(--pxb)}
+.pcard.sel{background:#FFF7C2;box-shadow:var(--pxb),0 0 0 9px var(--yellow),0 0 0 12px var(--ink)}
+.pcard.over:not(.sel){opacity:.5}
+.pc-main{display:block;width:100%;background:none;border:0;font:inherit;color:inherit;text-align:left;padding:14px;cursor:pointer}
+.pc-main:disabled{cursor:default}
+.pc-top{display:flex;gap:10px;align-items:center}
+.pc-top b{display:block;font-size:19px}
+.cost{display:inline-flex;align-items:center;gap:4px;font-size:15px}
+.sel-tag{margin-left:auto;font-size:14px;background:var(--lime);padding:2px 8px;box-shadow:0 0 0 2px var(--ink)}
+.pc-what{margin:10px 0 0;font-size:15px;color:#4A3A78}
+.why{margin:0;padding:8px 14px;border-top:2px dashed #C9B6EE;font-size:15px}
+.why b{color:var(--p2)}
+
+/* 결과 */
+.result-hero{text-align:center}
+.result-hero .title{font-size:46px;margin:4px 0}
+.calc{font-size:17px;margin:10px 0 0;color:#4A3A78}
+.citizens{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.citizens li{display:grid;grid-template-columns:52px 1fr;gap:12px;align-items:center}
+.citizens p{margin:2px 0 0}
+.mood{display:inline-block;font-size:13px;padding:1px 8px;margin-left:8px;box-shadow:0 0 0 2px var(--ink)}
+.mood.good{background:var(--lime)} .mood.mid{background:var(--yellow)} .mood.bad{background:var(--pink);color:#fff}
+.mini-row{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 14px}
+.sub{margin:6px 0 0;font-size:16px}
+
+/* 수직선 */
+.nl{margin:16px 0 6px}
+.nl-ends{display:flex;justify-content:space-between;font-size:14px;color:var(--p2)}
+.nl-dots{position:relative}
+.nl-track{display:grid;grid-template-columns:repeat(16,1fr);box-shadow:0 0 0 3px var(--ink)}
+.nl-cell{height:34px;display:flex;align-items:flex-end;justify-content:center;font-size:12px;color:var(--ink);border-right:2px solid rgba(30,18,64,.25)}
+.nl-cell:last-child{border-right:0}
+.nl-zones{display:grid;grid-template-columns:repeat(16,1fr);margin-top:8px}
+.nl-zone{text-align:center;font-size:13px;color:var(--ink);padding-top:3px;border-top:3px solid var(--ink);margin:0 3px;word-break:keep-all}
+.nl-dot{position:absolute;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center}
+.nl-dot i{width:22px;height:22px;background:var(--yellow);box-shadow:0 0 0 3px var(--ink);display:block}
+.nl-label{font-size:14px;background:var(--ink);color:#fff;padding:2px 8px;margin-bottom:4px;white-space:nowrap}
+.nl.big .nl-cell{height:58px;font-size:18px}
+.nl.big .nl-zone{font-size:21px}
+.nl.big .nl-label{font-size:19px}
+.nl.big .nl-dot i{width:30px;height:30px}
+.nl.big .nl-ends{font-size:18px}
+
+/* 교사 */
+.t-top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding:12px 20px;background:rgba(30,18,64,.94);box-shadow:0 4px 0 0 var(--ink)}
+.t-brand{font-family:'Galmuri14',sans-serif;font-size:20px}
+.t-brand small{font-size:15px;color:var(--cyan);margin-left:8px}
+.t-code{margin-left:auto;font-size:18px}
+.t-code b{font-family:'Galmuri14',sans-serif;font-size:42px;color:var(--yellow);letter-spacing:6px;margin-left:8px;vertical-align:middle}
+.tabs{display:flex;gap:6px}
+.tabs button,.stepper button{font-family:'Galmuri11',sans-serif;font-size:16px;color:var(--ink);background:#fff;border:0;padding:8px 14px;margin:4px;cursor:pointer;box-shadow:var(--pxb)}
+.tabs button.on,.stepper button.on{background:var(--yellow)}
+.stepper{display:flex;flex-wrap:wrap;gap:4px}
+.t-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:22px}
+.g-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:22px}
+.g-card h3{font-size:24px;margin-bottom:8px}
+.g-card ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.g-card li{display:flex;align-items:center;flex-wrap:wrap;gap:4px}
+.dot{width:12px;height:12px;background:#CFC6E4;display:inline-block;margin-right:6px;box-shadow:0 0 0 2px var(--ink)}
+.dot.on{background:var(--lime)}
+.st{font-size:15px;margin-left:auto;padding:0 6px}
+.st.doing{background:var(--yellow);box-shadow:0 0 0 2px var(--ink)}
+.st.done{background:var(--lime);box-shadow:0 0 0 2px var(--ink)}
+.star{font-size:14px;color:var(--p2);width:100%;padding-left:18px}
+.bar{display:grid;grid-template-columns:200px 1fr 64px;gap:12px;align-items:center;margin:10px 0}
+.bar .track{height:26px;background:var(--soft);box-shadow:0 0 0 3px var(--ink)}
+.bar .fill{height:100%;background:var(--cyan)}
+.bar b{font-family:'Galmuri14',sans-serif;text-align:right}
+.role-count{display:flex;gap:16px}
+.rc{flex:1;padding:14px;text-align:center;box-shadow:0 0 0 3px var(--ink)}
+.rc b{display:block;font-family:'Galmuri14',sans-serif;font-size:58px;line-height:1.2}
+.rc.A{background:#DDF8FF} .rc.B{background:#E9FBDF}
+.roles4{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
+.roles4 h3{font-size:26px;margin-bottom:6px}
+.code-big{font-family:'Galmuri14',sans-serif;font-size:72px;color:var(--yellow);letter-spacing:10px;text-shadow:4px 4px 0 var(--ink)}
+.hero{padding:48px 24px}
+.hero .big{font-size:26px}
+.moods{display:flex;gap:4px;margin-top:6px}
+.moods span{width:20px;height:20px;box-shadow:0 0 0 2px var(--ink)}
+.moods .good{background:var(--lime)} .moods .mid{background:var(--yellow)} .moods .bad{background:var(--pink)}
+.warn-banner{background:var(--pink);color:#fff;padding:12px 16px;text-align:center;box-shadow:var(--pxb);margin:4px}
+.table-wrap{overflow-x:auto}
+table.roster{border-collapse:collapse;width:100%;font-size:16px}
+.roster th,.roster td{border:2px solid var(--ink);padding:6px 8px;text-align:center;white-space:nowrap}
+.roster th{background:var(--soft)}
+.roster td.o{background:#E9FBDF} .roster td.x{background:#FFE3F6}
+.roster input,.roster select{font-size:16px;padding:4px 6px;width:auto}
+.roster input[type=number]{width:70px}
+.roster input[type=checkbox]{width:22px;height:22px}
+.file{position:relative;overflow:hidden;display:inline-block}
+
+/* 공통 */
+.modal{position:fixed;inset:0;z-index:50;background:rgba(30,18,64,.72);display:flex;align-items:center;justify-content:center;padding:16px}
+.modal .panel{max-width:460px;width:100%}
+[hidden]{display:none!important}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(200%);visibility:hidden;z-index:60;background:var(--ink);color:#fff;padding:12px 18px;box-shadow:0 0 0 3px #fff;transition:transform .2s steps(3);max-width:90vw}
+.toast.show{transform:translateX(-50%) translateY(0);visibility:visible}
+.toast.warn{background:#B81F92}
+@media (max-width:680px){
+  .baskets{grid-template-columns:1fr}
+  .title{font-size:30px}
+  .bar{grid-template-columns:1fr 1fr 56px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="stars" aria-hidden="true"></div>
+<div id="app"></div>
+<div class="modal" id="modal" hidden><div class="panel" id="modalBody"></div></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+'use strict';
+/* ▼ Apps Script 웹 앱 주소를 여기에 붙여넣기 */
+const API_URL = 'https://script.googleusercontent.com/a/macros/goedu.kr/echo?user_content_key=AUkAhnT1jSlYwPbjMAGEBiXIUi7uochEGdy7qPzThb0KHqqYeZ--WsLpa0YAPVnd4cQ4Ef4Xiqoa2x3pNx3t37FfaUv8C7kCn3XDUGeRBq6oyFe2x8ejouBAIEF28v05xUDMk7VQx5bPtVChuCC5nEFF6DpAmm8u1YnaupU0H7yWuhErVEm4s4ASsIPLVEazCvG6WWStQZCExDK7yUo320ocwzt6Dag2Jt9z_3vm-FNI1rm6zoUKFtyfm3ZQ4NFNlu_MtiEc0JFmgsssBsGeyD7EnIlcOcxZzaxvCelzm_rk&lib=MzdKGowzvs21VckFdTuig-OYWmZCruFAP';
+
+const ROLE = {
+  A: { name: '정책분류관', desc: '정책 카드 8장이 어떤 국가관에 가까운지 가려내는 전문가예요. 모둠 회의에서 "이 카드는 어느 쪽인지" 알려 주는 역할을 맡아요.' },
+  B: { name: '정책설계관', desc: '꼭 필요한 정책을 골라 그 이유를 설계하는 전문가예요. 모둠 회의에서 이유를 들어 모둠원을 설득하는 역할을 맡아요.' }
+};
+const QS = [
+  { q: 'Q1. 약속(계약)을 맺어 국가를 만들었다는 생각은?', a: '사회 계약설', e: '약속(계약)을 맺어 국가를 만들었다고 보는 입장이에요.', short: 'Q1 사회 계약설' },
+  { q: 'Q2. "국가는 국방·치안처럼 꼭 필요한 일만 해야 한다"는 주장은?', a: '소극적 국가관', e: '국가의 역할을 최소한으로 줄이자는 입장이에요.', short: 'Q2 소극적 국가관' },
+  { q: 'Q3. "국가가 병원비·교육비를 지원해야 한다"는 주장은?', a: '적극적 국가관', e: '국가가 국민의 삶을 적극적으로 도와야 한다는 입장이에요.', short: 'Q3 적극적 국가관' },
+  { q: 'Q4. 소극적 국가관을 따를 때 생길 수 있는 문제는?', a: '가난한 사람과 부자의 차이가 커질 수 있다', e: '국가가 돕는 일이 적으면 불평등이 커질 수 있어요.', short: 'Q4 소극적 국가관의 문제' }
+];
+const PHASES = ['대기', '결과 공유', '역할 과제', '정책 회의', '시민 반응', '결과 비교'];
+const STATE_ROLES = [
+  { t: '인권 보장', d: '법과 제도로 모든 국민의 기본적 권리를 지켜요.' },
+  { t: '평화 실현', d: '국방·외교·치안으로 국민의 생명과 안전을 지켜요.' },
+  { t: '사회 정의 구현', d: '자유와 평등의 권리가 침해받지 않게 정의로운 법과 제도를 만들어요.' },
+  { t: '복지 제공', d: '어려운 처지의 국민도 건강하고 행복하게 살도록 도와요.' }
+];
+const ZONE_COLORS = ['#1C9CC9', '#35D7F5', '#FFE14D', '#FF9BE6', '#F03BC8'];
+const MOOD = { good: '좋아요', mid: '그럭저럭', bad: '걱정돼요' };
+
+/* 픽셀 아이콘 (12×12) */
+const PAL = { k: '#1E1240', w: '#FFFFFF', y: '#FFD23F', r: '#FF4D6D', b: '#3D7BFF', g: '#7ED957', p: '#F03BC8', s: '#FFD7B0', c: '#35D7F5', o: '#FF9F43', n: '#8B5A2B', x: '#A9A9C8', v: '#9B5DE5', d: '#5A3A8C' };
+const ICONS = {
+  C1: ['..kkkkkkkk..', '.kbbbbbbbbk.', '.kbbbwwbbbk.', '.kbbwwwwbbk.', '.kbwwwwwwbk.', '.kbbwwwwbbk.', '.kbbbwwbbbk.', '..kbbbbbbk..', '..kbbbbbbk..', '...kbbbbk...', '....kbbk....', '.....kk.....'],
+  C2: ['............', '...kkkkkk...', '..kbbbbbbk..', '.kbbbyybbbk.', '.kbbyyyybbk.', '.kbbbyybbbk.', 'kkkkkkkkkkkk', 'kddddddddddk', '.kkkkkkkkkk.', '..kssssssk..', '..kskssksk..', '...kkkkkk...'],
+  C3: ['...kkkkkk...', '..kyyyyyyk..', '.kyyyyyyyyk.', '.kyykkkkyyk.', '.kyyyyyyyyk.', '..kyyyyyyk..', '...kkkkkk...', '.....pp.....', '.....pp.....', '...pppppp...', '....pppp....', '.....pp.....'],
+  C4: ['.kkkkkkkkkk.', 'kppwwppwwppk', 'kppwwppwwppk', '.kkkkkkkkkk.', '.kwwwwwwwwk.', '.kwcckwnnwk.', '.kwcckwnnwk.', '.kwkkkwnnwk.', '.kwwwwwnnwk.', '.kwwwwwnnwk.', 'kkkkkkkkkkkk', '............'],
+  C5: ['............', '.kkkkkkkkkk.', '.kwwwwwwwwk.', '.kwwwrrwwwk.', '.kwwwrrwwwk.', '.kwrrrrrrwk.', '.kwrrrrrrwk.', '.kwwwrrwwwk.', '.kwwwrrwwwk.', '.kwwwwwwwwk.', '.kkkkkkkkkk.', '............'],
+  C6: ['............', '....w...w...', '...w...w....', '............', '..kwwwwwwk..', '.kwwwwwwwwk.', 'kkkkkkkkkkkk', 'kooooooooook', '.kooooooook.', '..kooooook..', '...kkkkkk...', '............'],
+  C7: ['............', '............', 'kkkkkkkkkkkk', 'kwkwwwwwwkwk', 'kwwkwwwwkwwk', 'kwwwkyykwwwk', 'kwwwwkkwwwwk', 'kwwwwwwwwwwk', 'kwwwwwwwwwwk', 'kkkkkkkkkkkk', '............', '............'],
+  C8: ['............', '.kkkkkkkkkk.', 'kyyyyyyyyyyk', 'kyccyccyccyk', 'kyccyccyccyk', 'kyyyyyyyyyyk', 'kyyyyyyyyyyk', 'kkkkkkkkkkkk', '.kxxk..kxxk.', '..kk....kk..', '............', '............'],
+  P1: ['....kxxk....', '..kkxxxxkk..', '.kxxxxxxxxk.', '.kskssssksk.', '.kssssssssk.', '.ksssrrsssk.', '..kssssssk..', '...kkkkkk...', '..kvvvvvvk..', '.kvvvvvvvvk.', '.kvvvvvvvvk.', '.kkkkkkkkkk.'],
+  P2: ['..kwwwwwwk..', '.kwwwwwwwwk.', '.kkkkkkkkkk.', '.kskssssksk.', '.kssssssssk.', '.ksssrrsssk.', '..kssssssk..', '...kkkkkk...', '..kwoooowk..', '.kwoooooowk.', '.kwoooooowk.', '.kkkkkkkkkk.'],
+  P3: ['...kkkkkk...', '..knnnnnnk..', '.knnnnnnnnk.', '.kskssssksk.', '.kssssssssk.', '.ksssrrsssk.', '..kssssssk..', '...kkkkkk...', '..kcccckxxk.', '.kcccckx..xk', '.kcccckx..xk', '..kkkk.kxxk.'],
+  P4: ['...kkkkkk...', '..kddddddk..', '.kddddddddk.', '.kskssssksk.', '.kssssssssk.', '.ksssrrsssk.', '..kssssssk..', '...kkkkkk...', '..kbbwwbbk..', '.kbbbrrbbbk.', '.kbbbrrbbbk.', '.kkkkkkkkkk.'],
+  P5: ['...kkkkkk...', '..knnnnnnk..', '.knnnnnnnnk.', '.kskssssksk.', '.kssssssssk.', '.kssskksssk.', '..kssssssk..', '...kkkkkk...', '..kxwrrwxk..', '.kxxwrrwxxk.', '.kxxxrrxxxk.', '.kkkkkkkkkk.'],
+  coin: ['............', '...kkkkkk...', '..kyyyyyyk..', '.kyywyyyyyk.', '.kywyyyyyyk.', '.kyyyyyyyyk.', '.kyyyyyyyyk.', '.kyyyyyyyyk.', '..kyyyyyyk..', '...kkkkkk...', '............', '............']
+};
+function pix(key, size, extra) {
+  const rows = ICONS[key];
+  if (!rows) return '';
+  let r = '';
+  rows.forEach((row, y) => { [...row].forEach((ch, x) => { if (PAL[ch]) r += `<rect x="${x}" y="${y}" width="1.02" height="1.02" fill="${PAL[ch]}"/>`; }); });
+  return `<svg class="pix ${extra || ''}" viewBox="0 0 12 12" width="${size}" height="${size}" shape-rendering="crispEdges" aria-hidden="true">${r}</svg>`;
+}
+function iconFor(item, size) {
+  if (!item) return '';
+  if (item.icon && /^https?:\/\//.test(item.icon)) return `<img class="pix" src="${esc(item.icon)}" width="${size}" height="${size}" alt="">`;
+  return pix(item.icon && ICONS[item.icon] ? item.icon : item.id, size);
+}
+
+/* 공통 도구 */
+const $app = document.getElementById('app');
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+function toast(msg, kind) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + (kind || '');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => { t.className = 'toast'; }, 2800);
+}
+async function api(action, payload) {
+  let res;
+  try {
+    res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(Object.assign({ action }, payload || {})) });
+  } catch (e) { throw new Error('인터넷 연결을 확인해 주세요.'); }
+  let j;
+  try { j = await res.json(); } catch (e) { throw new Error('서버 응답을 읽지 못했어요. 웹 앱 배포 설정을 확인해 주세요.'); }
+  if (!j.ok) throw new Error(j.msg || '요청을 처리하지 못했어요.');
+  return j;
+}
+function openModal(html) {
+  document.getElementById('modalBody').innerHTML = html + '<div class="row" style="justify-content:flex-end;margin-top:12px"><button class="btn small" data-close>닫기</button></div>';
+  document.getElementById('modal').hidden = false;
+}
+document.getElementById('modal').addEventListener('click', e => {
+  if (e.target.id === 'modal' || e.target.closest('[data-close]')) document.getElementById('modal').hidden = true;
+});
+function makeStars() {
+  const box = document.getElementById('stars');
+  let h = '';
+  for (let i = 0; i < 46; i++) {
+    const cls = (Math.random() < 0.45 ? 'w' : '') + (Math.random() < 0.18 ? ' b' : '');
+    h += `<i class="${cls}" style="left:${(Math.random() * 100).toFixed(2)}%;top:${(Math.random() * 100).toFixed(2)}%"></i>`;
+  }
+  box.innerHTML = h;
+}
+function cardInfo(c) {
+  return `<div class="row" style="flex-wrap:nowrap">${iconFor(c, 64)}<div><h2>${esc(c.name)}</h2><span class="cost">${pix('coin', 20)} ${c.coin}코인</span></div></div>
+  <p><b>무슨 정책?</b><br>${esc(c.what)}</p><p><b>이렇게 되면</b><br>${esc(c.then)}</p>`;
+}
+function numberLine(dots, types, big) {
+  const cells = [];
+  for (let p = -8; p <= 7; p++) {
+    const ti = types.findIndex(t => p >= t.min && p <= t.max);
+    cells.push(`<div class="nl-cell" style="background:${ZONE_COLORS[ti] || '#DDD'}"><span>${p > 0 ? '+' + p : p}</span></div>`);
+  }
+  const zones = types.map(t => `<div class="nl-zone" style="grid-column:${Math.max(t.min, -8) + 9} / ${Math.min(t.max, 7) + 10}">${esc(t.name)}</div>`).join('');
+  const placed = [];
+  const step = big ? 62 : 0;
+  const gap = big ? 4 : 2;
+  const dl = dots.map(d => {
+    const p = Math.max(-8, Math.min(7, d.pos));
+    let lvl = 0;
+    while (placed.some(x => x.lvl === lvl && Math.abs(x.p - p) < gap)) lvl++;
+    placed.push({ p, lvl });
+    return `<div class="nl-dot" style="left:${((p + 8.5) / 16 * 100).toFixed(2)}%;bottom:${lvl * step}px">${d.label ? `<span class="nl-label">${esc(d.label)}</span>` : ''}<i></i></div>`;
+  }).join('');
+  const maxLvl = placed.reduce((m, x) => Math.max(m, x.lvl), 0);
+  const h = big ? (maxLvl + 1) * step + 10 : (dots.some(d => d.label) ? 64 : 34);
+  return `<div class="nl ${big ? 'big' : ''}"><div class="nl-ends"><span>◀ 소극적 역할</span><span>적극적 역할 ▶</span></div>
+    <div class="nl-dots" style="height:${h}px">${dl}</div><div class="nl-track">${cells.join('')}</div><div class="nl-zones">${zones}</div></div>`;
+}
+function calcText(res) {
+  const dir = res.pos > 0 ? `오른쪽으로 ${res.pos}칸` : res.pos < 0 ? `왼쪽으로 ${-res.pos}칸` : '딱 가운데';
+  return `적극 쪽에 쓴 코인 ${res.act}개 − 소극 쪽에 쓴 코인 ${res.pas}개 = ${dir}`;
+}
+
+/* ═════════════ 학생 ═════════════ */
+const S = {
+  code: '', sid: '', me: null, members: [], data: null, cardMap: {}, budget: 8, poll: { leader: 2, other: 4 },
+  phase: 0, per: 5, progress: { sort: null, reasons: [] }, group: null, reasons: [],
+  sort: { placement: {}, result: {}, picked: null, all: false, mission: false, msg: '', busy: false },
+  reason: { kind: null, card: null, who: '', why: '', feedback: '', busy: false },
+  local: { cards: [], seq: 0, name: '' }, swap: { out: null, in: null }, final: { forWho: '', giveUp: '' },
+  timer: null, polling: false, pendingRender: false, busy: false
+};
+const lsGet = () => { try { return JSON.parse(localStorage.getItem('pm_student') || 'null'); } catch (e) { return null; } };
+const lsSet = v => { try { v ? localStorage.setItem('pm_student', JSON.stringify(v)) : localStorage.removeItem('pm_student'); } catch (e) { /* 저장 불가 */ } };
+const costOf = cards => cards.reduce((s, id) => s + (S.cardMap[id] ? S.cardMap[id].coin : 0), 0);
+
+async function studentInit() {
+  document.body.classList.add('is-student');
+  const saved = lsGet();
+  if (saved && saved.code && saved.sid) {
+    S.code = saved.code; S.sid = saved.sid;
+    try { const j = await api('join', { code: S.code, sid: S.sid }); applyJoin(j); startPoll(); renderStudent(); return; } catch (e) { /* 로그인 화면으로 */ }
+  }
+  renderLogin();
+}
+function renderLogin(err) {
+  stopPoll();
+  $app.innerHTML = `<main class="wrap narrow">
+    <header class="brand"><h1 class="title">우리 나라 정책 회의</h1></header>
+    <form class="panel" id="loginForm">
+      <label class="field"><span>참여코드 (TV 화면의 6자리)</span><input id="inCode" inputmode="numeric" maxlength="6" autocomplete="off" value="${esc(S.code)}" required></label>
+      <label class="field"><span>학번</span><input id="inSid" inputmode="numeric" maxlength="10" autocomplete="off" value="${esc(S.sid)}" required></label>
+      ${err ? `<p class="err">${esc(err)}</p>` : ''}
+      <button class="btn big" type="submit">입장하기</button>
+    </form></main>`;
+  document.getElementById('loginForm').addEventListener('submit', async ev => {
+    ev.preventDefault();
+    S.code = document.getElementById('inCode').value.trim();
+    S.sid = document.getElementById('inSid').value.trim();
+    const btn = ev.target.querySelector('button');
+    btn.disabled = true; btn.textContent = '확인하는 중…';
+    try { renderConfirm(await api('join', { code: S.code, sid: S.sid })); } catch (e) { renderLogin(e.message); }
+  });
+}
+function renderConfirm(j) {
+  $app.innerHTML = `<main class="wrap narrow"><section class="panel center">
+    <p class="lead">${esc(j.me.sid)}</p><h2 class="big-name">${esc(j.me.name || '이름 없음')} 학생 맞나요?</h2>
+    <button class="btn big" id="yes">네, 맞아요</button><button class="btn ghost" id="no" style="margin-top:14px">아니요, 다시 입력할게요</button></section></main>`;
+  document.getElementById('yes').onclick = () => { lsSet({ code: S.code, sid: S.sid }); applyJoin(j); startPoll(); renderStudent(); };
+  document.getElementById('no').onclick = () => renderLogin();
+}
+function applyJoin(j) {
+  S.me = j.me; S.members = j.members || []; S.data = j.data; S.cardMap = {};
+  j.data.cards.forEach(c => { S.cardMap[c.id] = c; });
+  S.budget = j.budget; S.poll = j.poll; S.phase = j.phase; S.per = j.perPoint || 5;
+  S.progress = j.progress || { sort: null, reasons: [] };
+  S.group = j.group; S.reasons = j.reasons || [];
+  const sp = S.progress.sort;
+  if (sp) {
+    S.sort.placement = Object.assign({}, sp.placement || {});
+    Object.keys(S.sort.placement).forEach(k => { if (!S.sort.placement[k]) delete S.sort.placement[k]; });
+    S.sort.mission = !!sp.mission;
+    if (sp.correct === j.data.cards.length) { S.sort.all = true; j.data.cards.forEach(c => { S.sort.result[c.id] = true; }); }
+  }
+  if (S.group) { S.local.cards = (S.group.cards || []).slice(); S.local.seq = S.group.seq || 0; }
+}
+function stopPoll() { if (S.timer) clearInterval(S.timer); S.timer = null; }
+function startPoll() {
+  stopPoll();
+  const sec = S.me && S.me.leader ? S.poll.leader : S.poll.other;
+  S.timer = setInterval(pollStudent, Math.max(1, sec) * 1000);
+}
+const snapshot = () => JSON.stringify([S.phase, S.me, S.members, S.group, S.reasons]);
+async function pollStudent() {
+  if (S.polling || !S.me) return;
+  S.polling = true;
+  try {
+    const j = await api('state', { code: S.code, sid: S.sid });
+    const before = snapshot();
+    const wasLeader = S.me.leader;
+    S.phase = j.phase; S.me = j.me; S.members = j.members || []; S.reasons = j.reasons || [];
+    if (j.group) {
+      const g = j.group;
+      if (S.me.leader && !g.submitted) {
+        S.group = Object.assign({}, g, { cards: S.local.cards.slice() });
+      } else {
+        S.group = g;
+        if (!g.submitted) { S.local.cards = (g.cards || []).slice(); S.local.seq = g.seq || 0; }
+      }
+    } else S.group = null;
+    if (wasLeader !== S.me.leader) startPoll();
+    if (before !== snapshot()) softRender();
+  } catch (e) { /* 다음 갱신 때 다시 시도 */ } finally { S.polling = false; }
+}
+function isTyping() {
+  const a = document.activeElement;
+  return !!(a && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA') && a.closest('#app'));
+}
+function softRender() { if (isTyping()) { S.pendingRender = true; return; } renderStudent(); }
+document.addEventListener('focusout', () => setTimeout(() => { if (S.pendingRender && !isTyping()) renderStudent(); }, 200));
+
+function renderStudent() {
+  S.pendingRender = false;
+  if (!S.me) { renderLogin(); return; }
+  const r = ROLE[S.me.role];
+  let body;
+  if (S.phase === 0) body = viewWait();
+  else if (S.phase === 1) body = viewMyResult();
+  else if (S.phase === 2) body = viewTask();
+  else if (S.phase === 3 || S.phase === 4) body = viewGroup();
+  else body = viewCompare();
+  $app.innerHTML = `<header class="topbar"><div><b>${esc(S.me.name)}</b><span class="badge role-${S.me.role}">${r.name}</span>${S.me.group ? `<span class="badge">${S.me.group}모둠</span>` : ''}${S.me.leader ? '<span class="badge" style="background:var(--yellow)">대표</span>' : ''}</div>
+    <div class="phase-tag">${esc(PHASES[S.phase] || '')}</div><button class="link" data-act="logout">나가기</button></header><main class="wrap">${body}</main>`;
+}
+const panelMsg = (t, d) => `<section class="panel center hero"><h2 class="title sm">${esc(t)}</h2><p>${esc(d)}</p></section>`;
+function viewWait() { return panelMsg('곧 시작해요', '선생님이 시작하면 화면이 저절로 바뀌어요.'); }
+
+function membersHtml() {
+  if (!S.members.length) return '<p class="muted">모둠이 아직 정해지지 않았어요.</p>';
+  return `<ul class="members">${S.members.map(m => `<li>${esc(m.name)}<span class="badge role-${m.role}">${ROLE[m.role].name}</span>${m.leader ? '<em class="lead-mark">대표</em>' : ''}</li>`).join('')}</ul>`;
+}
+function viewMyResult() {
+  const me = S.me, r = ROLE[me.role];
+  const diag = me.hasDiag ? `<ul class="qlist">${QS.map((q, i) => `<li><span class="ox ${me.q[i] === 'O' ? 'O' : 'X'}">${me.q[i] === 'O' ? 'O' : 'X'}</span>
+      <div><p>${esc(q.q)}</p><p class="ans">정답: ${esc(q.a)} — ${esc(q.e)}</p></div></li>`).join('')}</ul>
+      <p style="margin:14px 0 0"><b>${QS.length * S.per}점 만점에 ${me.score * S.per}점</b>이에요.</p>`
+    : '<p>진단 결과가 없어요. 선생님이 정해 준 역할로 함께해요.</p>';
+  return `<section class="panel"><h2>내 진단 결과</h2>${diag}</section>
+    <section class="panel reveal"><p class="lead">오늘 당신의 역할은</p><h1 class="title">〈${r.name}〉</h1><p class="lead">입니다.</p><p>${esc(r.desc)}</p></section>
+    <section class="panel"><h2>${me.group ? me.group + '모둠 친구들' : '우리 모둠'}</h2>${membersHtml()}</section>`;
+}
+
+function viewTask() {
+  if (S.me.role === 'B') {
+    const mine = S.progress.reasons.filter(x => x.kind === '이유').map(x => x.card);
+    let html = reasonBlock('이유', 2, [], '정책설계관 미션', '꼭 필요하다고 생각하는 정책 카드 2장을 골라 이유를 써 보세요. 카드의 내용을 읽고, 누구에게 도움이 되는지 떠올려 봐요.');
+    if (mine.length >= 2) html += reasonBlock('추가', 1, mine, '추가 미션', '이번에는 내가 고르지 않은 카드 1장을 골라, 그 카드가 꼭 필요한 사람의 입장에서 이유를 써 보세요.');
+    return html;
+  }
+  let html = sortBlock();
+  if (S.sort.all) {
+    html += S.sort.mission
+      ? reasonBlock('이유', 1, [], '설계 미션', '꼭 필요하다고 생각하는 정책 카드 1장을 골라 이유를 써 보세요. 모둠 회의 때 이 이유로 친구들을 설득할 수 있어요.')
+      : `<section class="panel center"><h2>분류 완료!</h2><p>8장을 모두 맞혔어요. 정책설계관처럼 이유를 써 보는 설계 미션에 도전해 볼래요?</p><button class="btn big" data-act="mission">설계 미션 도전하기</button></section>`;
+  }
+  return html;
+}
+function sortBlock() {
+  const P = S.sort.placement, R = S.sort.result;
+  const chip = c => {
+    const st = R[c.id] === true ? 'right' : (R[c.id] === false ? 'wrong' : '');
+    return `<div class="chip ${st} ${S.sort.picked === c.id ? 'picked' : ''}"><button class="chip-main" data-act="sort-pick" data-id="${c.id}" ${R[c.id] === true ? 'disabled' : ''}>${iconFor(c, 38)}<span>${esc(c.name)}</span></button><button class="info" data-act="info" data-id="${c.id}" aria-label="${esc(c.name)} 설명 보기">i</button></div>`;
+  };
+  const cards = S.data.cards;
+  const tray = cards.filter(c => !P[c.id]);
+  const pas = cards.filter(c => P[c.id] === '소극');
+  const act = cards.filter(c => P[c.id] === '적극');
+  return `<section class="panel"><h2>두 바구니 분류</h2>
+    <p class="help">카드를 누른 다음, 넣을 바구니를 누르세요. 카드 옆 i 를 누르면 정책 설명을 볼 수 있어요.</p>
+    <div class="tray" data-act="sort-tray">${tray.map(chip).join('') || '<p class="muted" style="margin:8px">카드를 모두 바구니에 넣었어요.</p>'}</div>
+    <div class="baskets">
+      <div class="basket pas" data-act="sort-basket" data-side="소극"><h3>소극적 국가관</h3><div class="b-cards">${pas.map(chip).join('')}</div></div>
+      <div class="basket act" data-act="sort-basket" data-side="적극"><h3>적극적 국가관</h3><div class="b-cards">${act.map(chip).join('')}</div></div>
+    </div>
+    ${S.sort.msg ? `<p class="msg">${esc(S.sort.msg)}</p>` : ''}
+    ${S.sort.all ? '' : `<button class="btn big" style="margin-top:16px" data-act="sort-check" ${tray.length === 0 && !S.sort.busy ? '' : 'disabled'}>${S.sort.busy ? '확인하는 중…' : '확인하기'}</button>`}
+  </section>`;
+}
+function reasonBlock(kind, max, exclude, title, help) {
+  const mine = S.progress.reasons.filter(x => x.kind === kind);
+  const doneIds = mine.map(x => x.card);
+  const editing = S.reason.kind === kind && S.reason.card;
+  let html = `<section class="panel"><h2>${esc(title)}</h2><p class="help">${esc(help)}</p>`;
+  mine.forEach(x => {
+    const c = S.cardMap[x.card];
+    if (!c) return;
+    html += `<div class="done-reason">${iconFor(c, 40)}<div><b>${esc(c.name)}</b>
+      <p>이 정책은 <mark>${esc(x.who)}</mark>를 위해 필요하다. 왜냐하면 <mark>${esc(x.why)}</mark> 때문이다.</p>
+      ${x.feedback ? `<p class="fb">${esc(x.feedback)}</p>` : ''}
+      ${x.count < 3 && !(editing && S.reason.card === c.id) ? `<button class="btn small ghost" data-act="r-edit" data-kind="${kind}" data-id="${c.id}">고쳐 쓰기 (${3 - x.count}번 남음)</button>` : ''}</div></div>`;
+  });
+  if (doneIds.length < max || editing) {
+    if (!editing || doneIds.indexOf(S.reason.card) < 0) {
+      html += `<p class="sub" style="margin-top:12px">카드 고르기</p><div class="mini-grid">${S.data.cards.map(c => {
+        const off = exclude.indexOf(c.id) >= 0 || doneIds.indexOf(c.id) >= 0;
+        const sel = S.reason.kind === kind && S.reason.card === c.id;
+        return `<button class="mini ${sel ? 'sel' : ''} ${doneIds.indexOf(c.id) >= 0 ? 'done' : ''}" data-act="r-pick" data-kind="${kind}" data-id="${c.id}" ${off ? 'disabled' : ''}>${iconFor(c, 32)}<span>${esc(c.name)}</span></button>`;
+      }).join('')}</div>`;
+    }
+    if (editing) html += reasonForm();
+  } else {
+    html += '<p class="ok">완료했어요! 모둠 회의 때 이 이유로 친구들을 설득해 봐요.</p>';
+  }
+  return html + '</section>';
+}
+function reasonForm() {
+  const c = S.cardMap[S.reason.card];
+  return `<div class="sentence">
+    <div class="row" style="flex-wrap:nowrap;margin-bottom:10px">${iconFor(c, 44)}<div><b>${esc(c.name)}</b><p class="help" style="margin:0">${esc(c.what)} ${esc(c.then)}</p></div></div>
+    <p>이 정책은 <input data-bind="who" maxlength="40" placeholder="누구" value="${esc(S.reason.who)}" aria-label="누구">를 위해 필요하다.</p>
+    <p style="margin-bottom:4px">왜냐하면</p>
+    <textarea data-bind="why" maxlength="120" rows="2" placeholder="이유를 적어 주세요" aria-label="이유">${esc(S.reason.why)}</textarea>
+    <p>때문이다.</p>
+    <div class="row"><button class="btn" data-act="r-submit" ${S.reason.busy ? 'disabled' : ''}>${S.reason.busy ? '피드백 받는 중…' : '제출하고 피드백 받기'}</button><button class="btn small ghost" data-act="r-cancel">취소</button></div>
+    ${S.reason.feedback ? `<p class="fb">${esc(S.reason.feedback)}</p>` : ''}
+  </div>`;
+}
+
+function viewGroup() {
+  if (!S.me.group) return panelMsg('모둠이 아직 정해지지 않았어요', '선생님께 말씀해 주세요.');
+  const g = S.group || { cards: [] };
+  if (g.submitted) return resultView(g, true);
+  const lead = S.me.leader;
+  const cards = lead ? S.local.cards : (g.cards || []);
+  const left = S.budget - costOf(cards);
+  const leaderName = (S.members.find(m => m.leader) || {}).name || '대표';
+  let coins = '';
+  for (let i = 0; i < S.budget; i++) coins += pix('coin', 30, i < left ? '' : 'off');
+  return `<section class="panel"><div class="coinbar"><span>남은 코인</span><div class="coins">${coins}</div><b>${left} / ${S.budget}</b></div>
+      <p class="help" style="margin:10px 0 0">${lead ? '카드를 눌러 우리 나라 정책을 고르세요. 카드 아래 친구들이 쓴 이유를 함께 읽으며 정해요.' : `모둠 대표 ${esc(leaderName)} 학생이 고르고 있어요. 카드 아래 친구들의 이유를 보며 의견을 말해 주세요.`}</p></section>
+    <div class="policy-grid">${S.data.cards.map(c => policyCard(c, cards.indexOf(c.id) >= 0, lead, left)).join('')}</div>
+    ${lead ? `<section class="panel"><label class="field"><span>우리 나라 이름 (12자 이내)</span><input data-bind="gname" maxlength="12" value="${esc(S.local.name)}" placeholder="예: 별빛 공화국"></label>
+      <button class="btn big" data-act="g-submit" ${cards.length && !S.busy ? '' : 'disabled'}>${S.busy ? '제출하는 중…' : '우리 나라 제출하기'}</button></section>` : ''}`;
+}
+function policyCard(c, sel, lead, left) {
+  const reasons = S.reasons.filter(x => x.card === c.id);
+  return `<article class="pcard ${sel ? 'sel' : ''} ${!sel && c.coin > left ? 'over' : ''}">
+    <button class="pc-main" data-act="g-toggle" data-id="${c.id}" ${lead ? '' : 'disabled'} aria-pressed="${sel}">
+      <div class="pc-top">${iconFor(c, 46)}<div><b>${esc(c.name)}</b><span class="cost">${pix('coin', 18)} ${c.coin}코인</span></div>${sel ? '<span class="sel-tag">선택</span>' : ''}</div>
+      <p class="pc-what">${esc(c.what)}</p>
+    </button>
+    ${reasons.map(x => `<p class="why"><b>${esc(x.name)}</b> ${esc(x.who)}를 위해 — ${esc(x.why)}</p>`).join('')}
+  </article>`;
+}
+function resultView(g, interactive) {
+  const res = g.result;
+  const citizens = res.citizens.map(c => {
+    const info = S.data.citizens.find(x => x.id === c.id) || { id: c.id };
+    return `<li>${iconFor(info, 48)}<div><b>${esc(c.name)}</b><span class="mood ${c.mood}">${MOOD[c.mood]}</span><p>${esc(c.text)}</p></div></li>`;
+  }).join('');
+  const chosen = g.cards.map(id => `<span class="chip" style="margin:4px"><span class="chip-main">${iconFor(S.cardMap[id], 28)}<span>${esc(S.cardMap[id] ? S.cardMap[id].name : id)}</span></span></span>`).join('');
+  let html = `<section class="panel result-hero"><p class="lead">우리 나라 「${esc(g.name)}」는</p><h1 class="title">${esc(res.typeName)} 국가</h1><p>${esc(res.typeDesc)}</p>
+      ${numberLine([{ pos: res.pos, label: '' }], S.data.types, false)}<p class="calc">${esc(calcText(res))}</p></section>
+    <section class="panel"><h2>시민 5명의 반응</h2><ul class="citizens">${citizens}</ul></section>
+    <section class="panel"><h2>우리가 고른 정책</h2><div class="row">${chosen}</div>${g.swap ? `<p class="help" style="margin-top:8px">바꾼 카드: ${esc(S.cardMap[g.swap.out].name)} → ${esc(S.cardMap[g.swap.in].name)}</p>` : ''}</section>`;
+  if (g.final) {
+    html += `<section class="panel center"><h2>최종 제출 완료</h2><p class="lead">${esc(g.sentence)}</p></section>`;
+  } else if (interactive && S.me.leader) {
+    if (!g.swapped) {
+      const others = S.data.cards.filter(c => g.cards.indexOf(c.id) < 0);
+      const base = S.swap.out ? costOf(g.cards.filter(x => x !== S.swap.out)) : null;
+      html += `<section class="panel"><h2>카드 한 장 바꾸기 (한 번만)</h2><p class="help">걱정하는 시민이 있다면 카드 한 장을 바꿔 볼 수 있어요. 바꾸지 않아도 괜찮아요.</p>
+        <p class="sub">뺄 카드</p><div class="mini-row">${g.cards.map(id => `<button class="mini ${S.swap.out === id ? 'sel' : ''}" data-act="sw-out" data-id="${id}">${iconFor(S.cardMap[id], 28)}<span>${esc(S.cardMap[id].name)}</span></button>`).join('')}</div>
+        <p class="sub">넣을 카드</p><div class="mini-row">${others.map(c => {
+          const over = base !== null && base + c.coin > S.budget;
+          return `<button class="mini ${S.swap.in === c.id ? 'sel' : ''}" data-act="sw-in" data-id="${c.id}" ${over ? 'disabled' : ''}>${iconFor(c, 28)}<span>${esc(c.name)} (${c.coin})</span></button>`;
+        }).join('')}</div>
+        <button class="btn" data-act="sw-do" ${S.swap.out && S.swap.in && !S.busy ? '' : 'disabled'}>바꾸기</button></section>`;
+    }
+    html += `<section class="panel"><h2>마지막 한 줄</h2><div class="sentence"><p>우리는 <input data-bind="forWho" maxlength="20" placeholder="누구" value="${esc(S.final.forWho)}" aria-label="위한 사람">를 위해 <input data-bind="giveUp" maxlength="20" placeholder="누구" value="${esc(S.final.giveUp)}" aria-label="포기한 사람">를 포기했다.</p></div>
+      <button class="btn big" style="margin-top:14px" data-act="fin-submit" ${S.busy ? 'disabled' : ''}>최종 제출하기</button></section>`;
+  } else if (interactive) {
+    html += panelMsg('대표가 마지막 정리를 하고 있어요', '카드를 바꿀지, 누구를 위해 누구를 포기했는지 함께 이야기해 주세요.');
+  }
+  return html;
+}
+function viewCompare() {
+  const g = S.group;
+  if (g && g.submitted) return resultView(g, false) + panelMsg('TV 화면을 봐 주세요', '다른 모둠의 나라와 우리 나라를 비교해 봐요.');
+  return panelMsg('TV 화면을 봐 주세요', '다른 모둠의 나라를 함께 살펴봐요.');
+}
+
+async function onStudent(act, el) {
+  const id = el.dataset.id;
+  if (act === 'logout') { if (confirm('나갈까요? 다시 들어오면 이어서 할 수 있어요.')) { lsSet(null); S.me = null; renderLogin(); } return; }
+  if (act === 'info') { openModal(cardInfo(S.cardMap[id])); return; }
+  if (act === 'sort-pick') { S.sort.picked = S.sort.picked === id ? null : id; renderStudent(); return; }
+  if (act === 'sort-basket') {
+    if (!S.sort.picked) { toast('먼저 카드를 눌러 골라 주세요.'); return; }
+    S.sort.placement[S.sort.picked] = el.dataset.side; delete S.sort.result[S.sort.picked]; S.sort.picked = null; S.sort.msg = ''; renderStudent(); return;
+  }
+  if (act === 'sort-tray') {
+    if (S.sort.picked) { delete S.sort.placement[S.sort.picked]; delete S.sort.result[S.sort.picked]; S.sort.picked = null; renderStudent(); }
+    return;
+  }
+  if (act === 'sort-check') {
+    S.sort.busy = true; renderStudent();
+    try {
+      const j = await api('submitSort', { code: S.code, sid: S.sid, placement: S.sort.placement });
+      S.sort.result = j.result; S.sort.all = j.all;
+      S.sort.msg = j.all ? '8장 모두 맞았어요! 분류 완료.' : `${j.correct}장 맞았어요. 분홍 테두리 카드를 다시 생각해 봐요. 힌트: 국가가 꼭 필요한 최소한의 일일까, 국민의 생활을 더 많이 도와주는 일일까?`;
+    } catch (e) { toast(e.message, 'warn'); }
+    S.sort.busy = false; renderStudent(); return;
+  }
+  if (act === 'mission') {
+    try { await api('openMission', { code: S.code, sid: S.sid }); S.sort.mission = true; renderStudent(); } catch (e) { toast(e.message, 'warn'); }
+    return;
+  }
+  if (act === 'r-pick' || act === 'r-edit') {
+    const kind = el.dataset.kind;
+    const ex = S.progress.reasons.find(x => x.kind === kind && x.card === id);
+    S.reason = { kind, card: id, who: ex ? ex.who : '', why: ex ? ex.why : '', feedback: '', busy: false };
+    renderStudent(); return;
+  }
+  if (act === 'r-cancel') { S.reason = { kind: null, card: null, who: '', why: '', feedback: '', busy: false }; renderStudent(); return; }
+  if (act === 'r-submit') {
+    S.reason.busy = true; renderStudent();
+    try {
+      const j = await api('submitReason', { code: S.code, sid: S.sid, kind: S.reason.kind, card: S.reason.card, who: S.reason.who, why: S.reason.why });
+      if (j.needMore) { S.reason.feedback = j.feedback; S.reason.busy = false; renderStudent(); return; }
+      const list = S.progress.reasons;
+      const ex = list.find(x => x.kind === S.reason.kind && x.card === S.reason.card);
+      const item = { kind: S.reason.kind, card: S.reason.card, who: S.reason.who.trim(), why: S.reason.why.trim(), feedback: j.feedback, count: j.count };
+      if (ex) Object.assign(ex, item); else list.push(item);
+      S.reason = { kind: null, card: null, who: '', why: '', feedback: '', busy: false };
+    } catch (e) { toast(e.message, 'warn'); S.reason.busy = false; }
+    renderStudent(); return;
+  }
+  if (act === 'g-toggle') {
+    if (!S.me.leader || (S.group && S.group.submitted)) return;
+    const i = S.local.cards.indexOf(id);
+    let type;
+    if (i >= 0) { S.local.cards.splice(i, 1); type = 'remove'; }
+    else {
+      if (costOf(S.local.cards) + S.cardMap[id].coin > S.budget) { toast('코인이 부족해요. 다른 카드를 빼 보세요.', 'warn'); return; }
+      S.local.cards.push(id); type = 'add';
+    }
+    S.local.seq++;
+    if (S.group) S.group.cards = S.local.cards.slice();
+    renderStudent();
+    api('groupSelect', { code: S.code, sid: S.sid, cards: S.local.cards, seq: S.local.seq, act: { type, card: id } }).catch(e => toast(e.message, 'warn'));
+    return;
+  }
+  if (act === 'g-submit') {
+    if (!S.local.name.trim()) { toast('나라 이름을 지어 주세요.', 'warn'); return; }
+    S.busy = true; renderStudent();
+    try { const j = await api('groupSubmit', { code: S.code, sid: S.sid, cards: S.local.cards, name: S.local.name }); S.group = j.group; } catch (e) { toast(e.message, 'warn'); }
+    S.busy = false; renderStudent(); return;
+  }
+  if (act === 'sw-out') { S.swap.out = S.swap.out === id ? null : id; S.swap.in = null; renderStudent(); return; }
+  if (act === 'sw-in') { S.swap.in = S.swap.in === id ? null : id; renderStudent(); return; }
+  if (act === 'sw-do') {
+    S.busy = true; renderStudent();
+    try { const j = await api('groupSwap', { code: S.code, sid: S.sid, out: S.swap.out, in: S.swap.in }); S.group = j.group; S.swap = { out: null, in: null }; toast('카드를 바꿨어요. 시민 반응을 다시 확인해 봐요.'); } catch (e) { toast(e.message, 'warn'); }
+    S.busy = false; renderStudent(); return;
+  }
+  if (act === 'fin-submit') {
+    if (!S.final.forWho.trim() || !S.final.giveUp.trim()) { toast('두 빈칸을 모두 채워 주세요.', 'warn'); return; }
+    S.busy = true; renderStudent();
+    try { const j = await api('groupFinal', { code: S.code, sid: S.sid, forWho: S.final.forWho, giveUp: S.final.giveUp }); S.group = j.group; } catch (e) { toast(e.message, 'warn'); }
+    S.busy = false; renderStudent();
+  }
+}
+
+/* ═════════════ 교사 ═════════════ */
+const T = { pw: '', tab: 'class', dash: null, admin: null, showRoles: false, timer: null, last: '', pollSec: 4 };
+
+async function teacherInit() {
+  document.body.classList.add('is-teacher');
+  const pw = sessionStorage.getItem('pm_pw');
+  if (pw) { T.pw = pw; try { await api('tLogin', { pw }); teacherStart(); return; } catch (e) { sessionStorage.removeItem('pm_pw'); } }
+  renderTLogin();
+}
+function renderTLogin(err) {
+  $app.innerHTML = `<main class="wrap narrow"><header class="brand"><h1 class="title">교사 화면</h1></header>
+    <form class="panel" id="tForm"><label class="field"><span>비밀번호</span><input type="password" id="tPw" autocomplete="current-password" required></label>
+    ${err ? `<p class="err">${esc(err)}</p>` : ''}<button class="btn big" type="submit">들어가기</button></form></main>`;
+  document.getElementById('tForm').addEventListener('submit', async ev => {
+    ev.preventDefault();
+    const pw = document.getElementById('tPw').value;
+    try { await api('tLogin', { pw }); T.pw = pw; sessionStorage.setItem('pm_pw', pw); teacherStart(); } catch (e) { renderTLogin(e.message); }
+  });
+}
+function teacherStart() {
+  renderTeacher();
+  refreshDash();
+  restartTeacherTimer();
+}
+function restartTeacherTimer() {
+  if (T.timer) clearInterval(T.timer);
+  T.timer = setInterval(() => { if (T.tab === 'class') refreshDash(); }, T.pollSec * 1000);
+}
+async function refreshDash(force) {
+  try {
+    const j = await api('tDash', { pw: T.pw });
+    if (j.poll && j.poll !== T.pollSec) { T.pollSec = j.poll; restartTeacherTimer(); }
+    const key = JSON.stringify(j);
+    if (!force && key === T.last) return;
+    T.last = key; T.dash = j;
+    if (T.tab === 'class') renderTeacher();
+  } catch (e) { toast(e.message, 'warn'); }
+}
+async function loadAdmin() {
+  try { T.admin = await api('tAdmin', { pw: T.pw }); } catch (e) { toast(e.message, 'warn'); }
+  if (T.tab === 'admin') renderTeacher();
+}
+function renderTeacher() {
+  const d = T.dash;
+  const code = T.admin && T.tab === 'admin' ? T.admin.code : (d ? d.code : '');
+  const cls = d ? d.cls : (T.admin ? T.admin.cls : '');
+  $app.innerHTML = `<header class="t-top"><div class="t-brand">우리 나라 정책 회의${cls ? `<small>${esc(cls)}반</small>` : ''}</div>
+      <div class="t-code">참여코드<b>${esc(code || '------')}</b></div>
+      <nav class="tabs" aria-label="화면 바꾸기"><button data-act="t-tab" data-tab="class" class="${T.tab === 'class' ? 'on' : ''}">수업 화면</button><button data-act="t-tab" data-tab="admin" class="${T.tab === 'admin' ? 'on' : ''}">관리</button></nav></header>
+    <main class="wrap">${T.tab === 'class' ? classScreen() : adminScreen()}</main>`;
+}
+function allMembers(d) { return d.groups.reduce((a, g) => a.concat(g.members), []).concat(d.ungrouped || []); }
+function classScreen() {
+  const d = T.dash;
+  if (!d) return panelMsg('불러오는 중', '잠시만 기다려 주세요.');
+  const stepper = `<div class="stepper" role="group" aria-label="수업 단계">${PHASES.map((p, i) => `<button data-act="t-phase" data-p="${i}" class="${d.phase === i ? 'on' : ''}">${i}. ${p}</button>`).join('')}</div>`;
+  let body = '';
+  const all = allMembers(d);
+  const online = all.filter(m => m.online).length;
+  if (d.phase === 0) {
+    body = `<section class="panel center hero"><h1 class="title xl">우리 나라 정책 회의</h1>
+      <p class="big">참여코드</p><div class="code-big">${esc(d.code || '------')}</div><p class="big">를 입력하고 학번으로 들어와요</p>
+      <p class="muted">들어온 학생 ${online} / ${all.length}명</p></section>`;
+  } else if (d.phase === 1) {
+    body = `<div class="t-grid"><section class="panel"><h2>우리 반 진단 결과</h2><p class="muted" style="margin:0">${d.diag.n}명 응답 · 문항별 정답률</p>
+        ${QS.map((q, i) => `<div class="bar"><span>${esc(q.short)}</span><div class="track"><div class="fill" style="width:${d.diag.rates[i]}%"></div></div><b>${d.diag.rates[i]}%</b></div>`).join('')}</section>
+      <section class="panel"><h2>오늘의 역할</h2><div class="role-count"><div class="rc A"><span>${ROLE.A.name}</span><b>${d.diag.roles.A}</b>명</div><div class="rc B"><span>${ROLE.B.name}</span><b>${d.diag.roles.B}</b>명</div></div>
+        <button class="btn small ghost" style="margin-top:16px" data-act="t-roles">${T.showRoles ? '모둠 편성 보기' : '국가가 하는 일 4가지 보기'}</button></section></div>
+      ${T.showRoles ? `<div class="roles4">${STATE_ROLES.map(r => `<section class="panel"><h3>${esc(r.t)}</h3><p style="margin:0">${esc(r.d)}</p></section>`).join('')}</div>` : groupsGrid(d, 'team')}`;
+  } else if (d.phase === 2) {
+    body = groupsGrid(d, 'task');
+  } else if (d.phase === 3) {
+    body = groupsGrid(d, 'meet');
+  } else if (d.phase === 4) {
+    body = groupsGrid(d, 'react') + `<section class="panel">${MOOD_LEGEND}</section>`;
+  } else {
+    const done = d.groups.filter(g => g.state && g.state.submitted);
+    body = `<section class="panel"><h2>우리 반 나라들</h2>${numberLine(done.map(g => ({ pos: g.state.result.pos, label: `${g.g}모둠 ${g.state.name}` })), d.data.types, true)}${MOOD_LEGEND}</section>
+      <div class="g-grid">${done.map(g => `<section class="panel g-card"><h3>${g.g}모둠 「${esc(g.state.name)}」</h3><p style="margin:0 0 6px"><b>${esc(g.state.result.typeName)} 국가</b> (${g.state.result.pos > 0 ? '+' : ''}${g.state.result.pos})</p>${moodsHtml(g.state.result)}${g.state.sentence ? `<p style="margin:8px 0 0">${esc(g.state.sentence)}</p>` : ''}</section>`).join('') || panelMsg('아직 제출한 모둠이 없어요', '모둠이 제출하면 여기에 나타나요.')}</div>`;
+  }
+  const extra = d.ungrouped && d.ungrouped.length && d.phase >= 1 && d.phase <= 2
+    ? `<section class="panel"><h2>모둠 없는 학생</h2><p style="margin:0">${d.ungrouped.map(m => esc(m.name)).join(', ')}</p></section>` : '';
+  return stepper + body + extra;
+}
+function moodsHtml(res) {
+  return `<div class="moods" aria-label="시민 반응">${res.citizens.map(c => `<span class="${c.mood}" title="${esc(c.name)}: ${MOOD[c.mood]}"></span>`).join('')}</div>`;
+}
+const MOOD_LEGEND = '<p class="muted" style="margin:0;font-size:16px">시민 반응 칸: 할머니 · 사장님 · 휠체어 학생 · 중학생 · 회사원 순서 — 초록 좋아요, 노랑 그럭저럭, 분홍 걱정돼요</p>';
+function groupsGrid(d, mode) {
+  if (!d.groups.length) return panelMsg('모둠이 아직 없어요', '관리 탭에서 모둠을 편성해 주세요.');
+  return `<div class="g-grid">${d.groups.map(g => {
+    const st = g.state || {};
+    let inner = '';
+    if (mode === 'team' || mode === 'task') {
+      inner = `<ul>${g.members.map(m => `<li><span class="dot ${m.online ? 'on' : ''}" title="${m.online ? '접속 중' : '미접속'}"></span>${esc(m.name)}${m.leader ? '<em class="lead-mark">대표</em>' : ''}<span class="badge role-${m.role}">${ROLE[m.role].name}</span>
+        ${mode === 'task' ? `<span class="st ${m.done ? 'done' : (m.started ? 'doing' : '')}">${m.done ? '완료' : (m.started ? '진행 중' : '시작 전')}</span>${m.mission ? '<span class="star">★ 설계 미션 도전</span>' : ''}` : ''}</li>`).join('')}</ul>`;
+    } else if (mode === 'meet') {
+      const cards = st.cards || [];
+      const used = cards.reduce((s, id) => { const c = d.data.cards.find(x => x.id === id); return s + (c ? c.coin : 0); }, 0);
+      inner = st.submitted ? `<p style="margin:0"><b>제출 완료</b> 「${esc(st.name)}」</p>`
+        : `<p style="margin:0 0 6px">고르는 중 · 코인 ${used} / ${d.budget}</p>`;
+      inner += `<div class="row" style="gap:6px;margin-top:8px">${cards.map(id => iconFor(d.data.cards.find(x => x.id === id), 34)).join('')}</div>`;
+    } else {
+      inner = st.submitted ? `<p style="margin:0">「${esc(st.name)}」</p><p style="margin:4px 0"><b>${esc(st.result.typeName)} 국가</b></p>${moodsHtml(st.result)}
+          <p class="muted" style="margin:8px 0 0;font-size:16px">${st.final ? '최종 제출 완료' : (st.swapped ? '카드 바꿈' : '반응 확인 중')}</p>`
+        : '<p style="margin:0">아직 고르는 중</p>';
+    }
+    return `<section class="panel g-card"><h3>${g.g}모둠</h3>${inner}</section>`;
+  }).join('')}</div>`;
+}
+function adminScreen() {
+  const a = T.admin;
+  if (!a) return panelMsg('불러오는 중', '잠시만 기다려 주세요.');
+  const rows = a.list.map(s => `<tr data-sid="${esc(s.sid)}"><td>${esc(s.sid)}</td><td>${esc(s.name)}</td>
+      ${s.q.map(x => `<td class="${x === 'O' ? 'o' : (x === 'X' ? 'x' : '')}">${x || '-'}</td>`).join('')}
+      <td>${s.score == null ? '-' : s.score * (a.perPoint || 5)}</td><td>${s.q5 === '설계' ? '이유 쓰기' : (s.q5 === '분류' ? '개념 다지기' : '-')}</td>
+      <td><select class="aRole" aria-label="${esc(s.name)} 역할"><option value="A" ${s.role === 'A' ? 'selected' : ''}>${ROLE.A.name}</option><option value="B" ${s.role === 'B' ? 'selected' : ''}>${ROLE.B.name}</option></select>${s.manual ? ' <small>수정함</small>' : ''}</td>
+      <td><input class="aGroup" type="number" min="1" max="40" value="${s.group || ''}" aria-label="${esc(s.name)} 모둠"></td>
+      <td><input class="aLead" type="checkbox" ${s.leader ? 'checked' : ''} aria-label="${esc(s.name)} 대표"></td></tr>`).join('');
+  return `<div class="warn-banner">이 화면에는 학생 개인 점수가 있어요. TV에 띄우지 마세요.</div>
+    <div class="t-grid">
+      <section class="panel"><h2>수업 반</h2><div class="row" style="flex-wrap:nowrap"><input id="aCls" value="${esc(a.cls)}" aria-label="수업 반"><button class="btn small" data-act="a-cls">반 바꾸기</button></div><p class="help" style="margin-top:8px">학생명단의 '반' 값과 같게 적어요.</p></section>
+      <section class="panel"><h2>참여코드</h2><div class="code-big" style="font-size:48px">${esc(a.code || '없음')}</div><button class="btn small" data-act="a-code">새 코드 만들기</button></section>
+      <section class="panel"><h2>진단 결과 가져오기</h2><p class="help">구글폼 응답을 '진단입력' 시트에 붙여넣었으면 시트에서 불러오고, CSV 파일로 받았으면 CSV를 올려요.</p>
+        <div class="row"><button class="btn small" data-act="a-load">시트에서 불러오기</button><label class="btn small ghost file">CSV 올리기<input type="file" id="aCsv" accept=".csv,text/csv" hidden></label></div></section>
+      <section class="panel"><h2>모둠</h2><p class="help">정책분류관과 정책설계관이 고르게 섞이도록 4명씩 나누고, 정책설계관 한 명을 대표로 정해요.</p><button class="btn small" data-act="a-auto">4명씩 자동 편성</button></section>
+    </div>
+    <section class="panel"><h2>학생명단 (${a.list.length}명)</h2>
+      ${a.list.length ? `<div class="table-wrap"><table class="roster"><thead><tr><th>학번</th><th>이름</th><th>Q1</th><th>Q2</th><th>Q3</th><th>Q4</th><th>점수</th><th>희망</th><th>역할</th><th>모둠</th><th>대표</th></tr></thead><tbody>${rows}</tbody></table></div>
+      <button class="btn" style="margin-top:14px" data-act="a-save">명단 저장</button>` : '<p class="muted">아직 학생이 없어요. 진단 결과를 불러오거나 학생명단 시트에 반·학번·이름을 적어 주세요.</p>'}</section>
+    <section class="panel"><h2>기타</h2><div class="row"><button class="btn small ghost" data-act="a-refresh">시트에서 고친 내용 반영</button><button class="btn small danger" data-act="a-reset">이 반 수업 기록 지우기</button></div>
+      <p class="help" style="margin-top:8px">수업 기록 지우기는 이 반의 개인과제·모둠결과·선택기록을 지우고 단계를 0으로 돌려요. 리허설 뒤에 쓰세요.</p></section>`;
+}
+async function onTeacher(act, el) {
+  const run = async (fn, okMsg) => {
+    try { const j = await fn(); if (okMsg) toast(typeof okMsg === 'function' ? okMsg(j) : okMsg); } catch (e) { toast(e.message, 'warn'); }
+    await loadAdmin(); await refreshDash(true);
+  };
+  if (act === 't-tab') {
+    T.tab = el.dataset.tab;
+    renderTeacher();
+    if (T.tab === 'admin') loadAdmin(); else refreshDash(true);
+    return;
+  }
+  if (act === 't-phase') {
+    try { await api('tSetPhase', { pw: T.pw, p: Number(el.dataset.p) }); } catch (e) { toast(e.message, 'warn'); }
+    T.showRoles = false; await refreshDash(true); return;
+  }
+  if (act === 't-roles') { T.showRoles = !T.showRoles; renderTeacher(); return; }
+  if (act === 'a-cls') { const cls = document.getElementById('aCls').value.trim(); return run(() => api('tSetClass', { pw: T.pw, cls }), '반을 바꿨어요.'); }
+  if (act === 'a-code') return run(() => api('tNewCode', { pw: T.pw }), j => `새 참여코드: ${j.code}`);
+  if (act === 'a-load') return run(() => api('tLoadDiag', { pw: T.pw }), diagMsg);
+  if (act === 'a-auto') {
+    if (!confirm('지금 모둠 편성을 지우고 4명씩 새로 나눌까요?')) return;
+    return run(() => api('tAutoGroup', { pw: T.pw, size: 4 }), j => `${j.groups}개 모둠으로 나눴어요.`);
+  }
+  if (act === 'a-save') {
+    const list = [...document.querySelectorAll('tr[data-sid]')].map(tr => ({
+      sid: tr.dataset.sid, role: tr.querySelector('.aRole').value,
+      group: tr.querySelector('.aGroup').value, leader: tr.querySelector('.aLead').checked
+    }));
+    return run(() => api('tSaveRoster', { pw: T.pw, list }), '명단을 저장했어요.');
+  }
+  if (act === 'a-refresh') return run(() => api('tRefresh', { pw: T.pw }), '시트 내용을 다시 읽었어요.');
+  if (act === 'a-reset') {
+    if (!confirm('이 반의 수업 기록을 모두 지울까요? 되돌릴 수 없어요.')) return;
+    return run(() => api('tReset', { pw: T.pw }), '수업 기록을 지웠어요.');
+  }
+}
+function diagMsg(j) {
+  return `${j.total}명을 불러왔어요. ${ROLE.B.name} ${j.B}명, ${ROLE.A.name} ${j.A}명` + (j.cut ? ` (희망자 중 ${j.cut}명은 비율 때문에 ${ROLE.A.name})` : '');
+}
+function uploadCsv(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = async () => {
+    try { toast(diagMsg(await api('tUploadCsv', { pw: T.pw, csv: reader.result }))); } catch (e) { toast(e.message, 'warn'); }
+    await loadAdmin(); await refreshDash(true);
+  };
+  reader.readAsText(file, 'utf-8');
+}
+
+/* ═════════════ 시작 ═════════════ */
+$app.addEventListener('click', e => {
+  const el = e.target.closest('[data-act]');
+  if (!el || el.disabled) return;
+  const act = el.dataset.act;
+  if (act.indexOf('t-') === 0 || act.indexOf('a-') === 0) onTeacher(act, el); else onStudent(act, el);
+});
+$app.addEventListener('input', e => {
+  const el = e.target.closest('[data-bind]');
+  if (!el) return;
+  const k = el.dataset.bind;
+  if (k === 'who' || k === 'why') S.reason[k] = el.value;
+  else if (k === 'gname') {
+    S.local.name = el.value;
+  } else if (k === 'forWho' || k === 'giveUp') S.final[k] = el.value;
+});
+$app.addEventListener('change', e => { if (e.target.id === 'aCsv') uploadCsv(e.target.files[0]); });
+window.addEventListener('hashchange', () => location.reload());
+
+(function boot() {
+  makeStars();
+  if (API_URL.indexOf('PASTE_') === 0) {
+    $app.innerHTML = `<main class="wrap narrow"><section class="panel"><h2>서버 주소가 필요해요</h2><p>index.html 맨 위의 API_URL에 Apps Script 웹 앱 주소를 붙여넣어 주세요.</p></section></main>`;
+    return;
+  }
+  if (location.hash === '#teacher') teacherInit(); else studentInit();
+})();
+</script>
+</body>
+</html>
